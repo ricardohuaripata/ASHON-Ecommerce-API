@@ -1,7 +1,7 @@
 {
-  "name": "ASHON-Ecommerce-API",
+  "name": "ashon-ecommerce-api",
   "version": "1.0.0",
-  "description": "TFG Ecommerce Backend NodeJS & MongoDB",
+  "description": "TFG ASHON Ecommerce Backend NodeJS & MongoDB",
   "main": "src/server.js",
   "author": "Ricardo Huaripata",
   "license": "ISC",
