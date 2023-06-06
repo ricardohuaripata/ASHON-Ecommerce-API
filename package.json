@@ -6,6 +6,7 @@
   "author": "Ricardo Huaripata",
   "license": "ISC",
   "engines": {
+    "yarn": "1.22.19",
     "node": ">=12.0.0"
   },
   "scripts": {
