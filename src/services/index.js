@@ -69,7 +69,8 @@ import {
   orderStatus,
   queryOrders,
   queryOrder,
-  cancelOrder
+  cancelOrder,
+  queryAllHistoryOrders
 } from './order.service';
 
 import {
@@ -159,7 +160,8 @@ const orderService = {
   orderStatus,
   queryOrders,
   queryOrder,
-  cancelOrder
+  cancelOrder,
+  queryAllHistoryOrders
 };
 
 const discountService = {

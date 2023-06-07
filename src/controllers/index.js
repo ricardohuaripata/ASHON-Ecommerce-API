@@ -72,7 +72,8 @@ import {
   orderStatus,
   getAllOrders,
   getOrder,
-  cancelOrder
+  cancelOrder,
+  getAllHistoryOrders
 } from './order.controller';
 
 import {
@@ -165,7 +166,8 @@ const orderController = {
   orderStatus,
   getAllOrders,
   getOrder,
-  cancelOrder
+  cancelOrder,
+  getAllHistoryOrders
 };
 
 const discountController = {

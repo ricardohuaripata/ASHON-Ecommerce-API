@@ -8,7 +8,7 @@ import { orderController } from '../controllers/index';
 import protect from '../middlewares/protect';
 import restrictedTo from '../middlewares/restrictedTo';
 
-const { createOrder, orderStatus, getAllOrders, getOrder, cancelOrder } =
+const { createOrder, orderStatus, getAllOrders, getOrder, cancelOrder, getAllHistoryOrders } =
   orderController;
 
 // Router Initialization
@@ -17,7 +17,11 @@ const router = express.Router();
 // Protect All Routes
 router.use(protect);
 
-// Get All Orders Route
+// Get All History Orders Route
+
+router.get('/history', restrictedTo('admin'), getAllHistoryOrders);
+
+// Get All User Orders Route
 // Create Order Route
 router.route('/').get(getAllOrders).post(createOrder);
 

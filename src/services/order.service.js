@@ -282,6 +282,31 @@ export const queryOrders = catchAsync(async (req) => {
   };
 });
 
+
+export const queryAllHistoryOrders = catchAsync(async (req) => {
+
+  // 1) Get all orders
+  const orders = await APIFeatures(req, Order);
+
+  // 2) Check of orders doesn't exist
+  if (!orders) {
+    return {
+      type: 'Error',
+      message: 'noOrders',
+      statusCode: 404
+    };
+  }
+
+  // 3) If everything is OK, send data
+  return {
+    type: 'Success',
+    message: 'successfulOrdersFound',
+    statusCode: 200,
+    orders
+  };
+});
+
+
 /**
  * @desc    Query Order Using It's ID
  * @param   { String } id - Order ID

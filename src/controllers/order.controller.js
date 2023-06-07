@@ -105,6 +105,37 @@ export const getAllOrders = catchAsync(async (req, res) => {
   });
 });
 
+export const getAllHistoryOrders = catchAsync(async (req, res) => {
+  let { page, sort, limit, select } = req.query;
+
+  // 1) Setting default params
+  if (!page) page = 1;
+  if (!sort) sort = '';
+  if (!limit) limit = 20;
+  if (!select) select = '';
+
+  // 1) Get all orders
+  const { type, message, statusCode, orders } = await orderService.queryAllHistoryOrders(
+    req
+  );
+
+  // 2) Check if there is an error
+  if (type === 'Error') {
+    return res.status(statusCode).json({
+      type,
+      message: req.polyglot.t(message)
+    });
+  }
+
+  // 3) If everything is OK, send data
+  return res.status(statusCode).json({
+    type,
+    message: req.polyglot.t(message),
+    orders
+  });
+});
+
+
 /**
  * @desc      Get Order Using It's ID Controller
  * @param     { Object } req - Request object
