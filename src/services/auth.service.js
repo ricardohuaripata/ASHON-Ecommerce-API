@@ -412,7 +412,7 @@ export const verifyEmail = catchAsync(async (verifyEmailToken) => {
 
   // 5) If everything is OK, send data
   return {
-    type: 'Sucess',
+    type: 'Success',
     statusCode: 200,
     message: 'successfulEmailVerification'
   };

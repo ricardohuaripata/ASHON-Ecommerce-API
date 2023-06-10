@@ -79,6 +79,9 @@ const config = {
   },
   stripe: {
     secret_key: envVars.STRIPE_SECRET_KEY
+  },
+  frontend: {
+    verificationPageUrl: process.env.FRONTEND_VERIFICATION_PAGE_URL
   }
 };
 

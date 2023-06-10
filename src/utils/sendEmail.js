@@ -44,7 +44,7 @@ const sendEmail = catchAsync(async (to, subject, text) => {
 
     // Create the email options and body
     const mailOptions = {
-      from: `Ricardo Huaripata - Ecommerce API < ${config.email.from} >`,
+      from: `Ricardo Huaripata - ASHON Ecommerce < ${config.email.from} >`,
       to,
       subject,
       text
@@ -94,9 +94,10 @@ export const sendAfterResetPasswordMessage = catchAsync(async (to) => {
  */
 export const sendVerificationEmail = catchAsync(async (to, token) => {
   const subject = 'Email Verification';
-  const verificationEmailUrl = `/verify-email?token=${token}`;
+  const verificationEmailUrl = `${config.frontend.verificationPageUrl}?token=${token}`;
+  const linkText = 'Click here';
   const text = `Dear user,
-To verify your email, click on this link: ${verificationEmailUrl}
+To verify your email, <a href="${verificationEmailUrl}">${linkText}</a>.
 If you did not create an account, then ignore this email.`;
 
   await sendEmail(to, subject, text);
