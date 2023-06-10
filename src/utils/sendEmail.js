@@ -94,10 +94,9 @@ export const sendAfterResetPasswordMessage = catchAsync(async (to) => {
  */
 export const sendVerificationEmail = catchAsync(async (to, token) => {
   const subject = 'Email Verification';
-  const verificationEmailUrl = `${config.frontend.verificationPageUrl}?token=${token}`;
-  const linkText = 'Click here';
+  const verificationEmailUrl = `${config.frontend.verificationPageUrl}/${token}`;
   const text = `Dear user,
-To verify your email, <a href="${verificationEmailUrl}">${linkText}</a>.
+To verify your email, click on this link: ${verificationEmailUrl}
 If you did not create an account, then ignore this email.`;
 
   await sendEmail(to, subject, text);
