@@ -19,7 +19,7 @@ export const messages = {
     noUserFound: 'No user found.',
     emailVerified: 'Email is already verified.',
     noProductFound: 'No product found with this ID.',
-    productExist: 'Product already exits',
+    productExist: 'Product already exist',
     noProductsFound: 'No products found.',
     invalidRequest: 'Invalid request.',
     noCartForUser: 'No cart found for user with this email.',
