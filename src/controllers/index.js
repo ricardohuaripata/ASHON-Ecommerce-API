@@ -55,7 +55,8 @@ import {
   getReview,
   addReview,
   updateReview,
-  deleteReview
+  deleteReview,
+  getAllReviewsByUser
 } from './review.controller';
 
 import {
@@ -149,7 +150,8 @@ const reviewController = {
   getReview,
   addReview,
   updateReview,
-  deleteReview
+  deleteReview,
+  getAllReviewsByUser
 };
 
 const cartController = {

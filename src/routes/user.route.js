@@ -1,9 +1,9 @@
 // Packages
-import express from 'express';
+import express from "express";
 
 // Middlewares
-import protect from '../middlewares/protect';
-import restrictedTo from '../middlewares/restrictedTo';
+import protect from "../middlewares/protect";
+import restrictedTo from "../middlewares/restrictedTo";
 // Controllers
 import {
   createUser,
@@ -12,33 +12,38 @@ import {
   updateUserDetails,
   deleteUser,
   deleteMyAccount,
-  getAuthUser
-} from '../controllers/user.controller';
+  getAuthUser,
+} from "../controllers/user.controller";
+
+import { getAllReviewsByUser } from "../controllers/review.controller";
 
 // Router Initialization
 const router = express.Router();
 
 // Get All Users Route
-router.get('/', getUsers);
+router.get("/", getUsers);
 
 // Get User Route
-router.get('/:id', getUser);
+router.get("/:id", getUser);
+
+// Get User Reviews Route
+router.get('/:userId/reviews', getAllReviewsByUser);
 
 // Protect All Next Routes
 router.use(protect);
 
-router.get('/token/user', getAuthUser);
+router.get("/token/user", getAuthUser);
 
 // Create New User (Multer Middleware) Route
-router.post('/', restrictedTo('admin'), createUser);
+router.post("/", restrictedTo("admin"), createUser);
 
 // Update User Details Route
-router.patch('/update-details', updateUserDetails);
+router.patch("/update-details", updateUserDetails);
 
 // Delete LoggedIn User Account Route
-router.delete('/me', deleteMyAccount);
+router.delete("/me", deleteMyAccount);
 
 // Delete User Route
-router.delete('/:id', restrictedTo('admin'), deleteUser);
+router.delete("/:id", restrictedTo("admin"), deleteUser);
 
 export default router;

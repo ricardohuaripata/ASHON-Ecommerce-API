@@ -3,7 +3,7 @@ import catchAsync from '../utils/catchAsync';
 import APIFeatures from '../utils/apiFeatures';
 
 // Models
-import { Review, Product, Order } from '../models/index';
+import { Review, Product, Order, User } from '../models/index';
 
 /**
  * @desc    Create New Review
@@ -71,6 +71,48 @@ export const createReview = catchAsync(async (product, user, body) => {
     message: 'successfulReviewCreate',
     statusCode: 201,
     newReview
+  };
+});
+
+/**
+ * @desc    Query All Reviews
+ * @param   { Object } req - Request object
+ * @returns { Object<type|message|statusCode|reviews> }
+ */
+export const queryReviewsByUser = catchAsync(async (req) => {
+  const user = await User.findById(req.params.userId);
+
+  // 1) Check if user doesn't exist
+  if (!user) {
+    return {
+      type: 'Error',
+      message: 'noUserFound',
+      statusCode: 404
+    };
+  }
+
+  let reviews = await APIFeatures(req, Review);
+
+  // 2) Check if reviews doesn't exist
+  if (reviews.length === 0) {
+    return {
+      type: 'Error',
+      message: 'noReviewsFound',
+      statusCode: 404
+    };
+  }
+
+  // 3) Filter review to select only reviews of the user only
+  reviews = reviews.filter(
+    (review) => review.user.toString() === req.params.userId.toString()
+  );
+
+  // 4) If everything is OK, send data
+  return {
+    type: 'Success',
+    message: 'successfulReviewsFound',
+    statusCode: 200,
+    reviews
   };
 });
 

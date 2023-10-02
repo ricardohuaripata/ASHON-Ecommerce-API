@@ -14,7 +14,8 @@ import {
   queryReviews,
   queryReviewById,
   updateReview,
-  deleteReview
+  deleteReview,
+  queryReviewsByUser
 } from './review.service';
 
 import {
@@ -105,7 +106,8 @@ const reviewService = {
   queryReviews,
   queryReviewById,
   updateReview,
-  deleteReview
+  deleteReview,
+  queryReviewsByUser
 };
 
 const userService = {
