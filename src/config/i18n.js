@@ -36,6 +36,7 @@ export const messages = {
     notSeller:
       'Sorry you are not the owner of this product, you cannot perform this operation.',
     selectImages: 'Please select one or more images!',
+    noOrderForProduct: 'Sorry, you must have bought this item before.',
     noReviewsFound: 'No reviews found.',
     noReviewFound: 'No review found with this ID',
     onlyOneReview: 'Sorry, you cannot write more than one review.',
@@ -154,6 +155,7 @@ export const messages = {
     selectImage: 'Por favor selecciona una imagen.',
     notSeller: 'Lo siento, no eres el propietario de este producto, no puedes realizar esta operación.',
     selectImages: 'Por favor selecciona una o más imágenes.',
+    noOrderForProduct: 'Lo siento, debes haber comprado este artículo antes.',
     noReviewsFound: 'No se encontraron reseñas.',
     noReviewFound: 'No se encontró ninguna reseña con este ID.',
     onlyOneReview: 'Lo siento, no puedes escribir más de una reseña.',

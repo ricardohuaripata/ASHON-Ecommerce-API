@@ -208,14 +208,3 @@ export const deleteMyAccount = catchAsync(async (user) => {
     statusCode: 200
   };
 });
-
-export const queryAuthUser = catchAsync(async (user) => {
-
-  // 2) If everything is OK, send data;
-  return {
-    type: 'Success',
-    message: 'successfulUserFound',
-    statusCode: 200,
-    user
-  };
-});

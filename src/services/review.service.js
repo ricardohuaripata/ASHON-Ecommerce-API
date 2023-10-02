@@ -3,7 +3,7 @@ import catchAsync from '../utils/catchAsync';
 import APIFeatures from '../utils/apiFeatures';
 
 // Models
-import { Review, Product } from '../models/index';
+import { Review, Product, Order } from '../models/index';
 
 /**
  * @desc    Create New Review
@@ -32,9 +32,23 @@ export const createReview = catchAsync(async (product, user, body) => {
     };
   }
 
+  // 2) Check if the user has ever ordered the product
+  const userOrders = await Order.find({ user });
+  const orderedProduct = userOrders.some(order => {
+    return order.products.some(orderProduct => orderProduct.product.equals(product));
+  });
+
+  if (!orderedProduct) {
+    return {
+      type: 'Error',
+      message: 'noOrderForProduct',
+      statusCode: 400
+    };
+  }
+
   const checkUser = await Review.find({ user, product });
 
-  // 2) Check if the user make a review before on that product
+  // 3) Check if the user make a review before on that product
   if (checkUser.length !== 0) {
     return {
       type: 'Error',
@@ -43,7 +57,7 @@ export const createReview = catchAsync(async (product, user, body) => {
     };
   }
 
-  // 3) Create review
+  // 4) Create review
   const newReview = await Review.create({
     product,
     user,
@@ -51,7 +65,7 @@ export const createReview = catchAsync(async (product, user, body) => {
     rating
   });
 
-  // 4) If everything is OK, send data
+  // 5) If everything is OK, send data
   return {
     type: 'Success',
     message: 'successfulReviewCreate',
