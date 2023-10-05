@@ -119,7 +119,9 @@ export const messages = {
     successfulStatusUpdate: 'Order status updated successfully.',
     discountCodeDeleted: 'Discount code deleted successfully.',
     discountCodeCanceled: 'Discount code cancelled from order successfully.',
-    successfulGetDiscount: 'Discount found successfully.'
+    successfulGetDiscount: 'Discount found successfully.',
+    invalidEmailPattern: 'Invalid email pattern.',
+    emailNotRegistered: 'No account found with this email.',
   },
   es: {
     profileImageRequired: '¡Se requiere una imagen de perfil, por favor sube una imagen!',
@@ -231,6 +233,8 @@ export const messages = {
     successfulStatusUpdate: 'Estado de la orden actualizado exitosamente.',
     discountCodeDeleted: 'Código de descuento eliminado exitosamente.',
     discountCodeCanceled: 'Código de descuento cancelado de la orden exitosamente.',
-    successfulGetDiscount: 'Descuento encontrado exitosamente.'
+    successfulGetDiscount: 'Descuento encontrado exitosamente.',
+    invalidEmailPattern: 'Formato de email no válido.',
+    emailNotRegistered: 'No se encontró ninguna cuenta con este email.',
   }
 };

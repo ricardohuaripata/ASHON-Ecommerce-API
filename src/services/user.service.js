@@ -127,7 +127,7 @@ export const queryUser = catchAsync(async (id) => {
  * @returns { Object<type|message|statusCode|user> }
  */
 export const updateUserDetails = catchAsync(async (user, body) => {
-  const { id } = user;
+  const { id, email: currentUserEmail, isEmailVerified } = user;
   const { password, passwordConfirmation, email } = body;
 
   // 1) Check if password and passwordConfirmation are provided
@@ -151,7 +151,14 @@ export const updateUserDetails = catchAsync(async (user, body) => {
   }
 
   // 3) Find user document and update it
-  user = await User.findByIdAndUpdate(id, body, {
+  const updateFields = { ...body };
+
+  // If email is being updated and it's different from the current email, set isEmailVerified to false
+  if (email && email !== currentUserEmail && isEmailVerified) {
+    updateFields.isEmailVerified = false;
+  }
+
+  user = await User.findByIdAndUpdate(id, updateFields, {
     new: true,
     runValidators: true
   });
