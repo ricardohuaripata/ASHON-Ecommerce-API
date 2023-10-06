@@ -248,7 +248,7 @@ export const sendVerificationEmail = catchAsync(async (to, token) => {
                     </tr> <!-- COPY -->
                     <tr>
                         <td bgcolor="#ffffff" align="center" style="padding: 0px 30px 0px 30px; color: #666666; font-family: 'Lato', Helvetica, Arial, sans-serif; font-size: 18px; font-weight: 400; line-height: 25px;">
-                            <p style="margin: 0px 0px 20px 0px;">Si no ha creado ninguna cuenta, entonces ignore este correo.</p>
+                            <p style="margin: 0px 0px 20px 0px;">Si no has creado ninguna cuenta recientemente ignora este correo.</p>
                         </td>
                     </tr> <!-- COPY -->
 
