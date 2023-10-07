@@ -118,7 +118,7 @@ export const createOrder = catchAsync(async (body, user) => {
     amount: Math.ceil(cart.totalPrice * 100),
     currency: 'usd',
     source: token.id,
-    description: 'ASHON Ecommerce, payment made by a customer',
+    description: 'ASHON Store, payment made by a customer',
     metadata: {
       address_city: city,
       address_country: country,
