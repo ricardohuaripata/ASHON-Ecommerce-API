@@ -122,6 +122,7 @@ export const messages = {
     successfulGetDiscount: 'Discount found successfully.',
     invalidEmailPattern: 'Invalid email pattern.',
     emailNotRegistered: 'No account found with this email.',
+    invalidGoogleAccessToken: 'Invalid Google access token.',
   },
   es: {
     profileImageRequired: '¡Se requiere una imagen de perfil, por favor sube una imagen!',
@@ -236,5 +237,7 @@ export const messages = {
     successfulGetDiscount: 'Descuento encontrado exitosamente.',
     invalidEmailPattern: 'Formato de email no válido.',
     emailNotRegistered: 'No se encontró ninguna cuenta con este email.',
+    invalidGoogleAccessToken: 'Token de acceso a Google no válido',
+
   }
 };

@@ -1,22 +1,23 @@
 // Configs
-import tokenTypes from '../config/tokens';
+import tokenTypes from "../config/tokens";
+import axios from "axios";
 
 // Utils
-import catchAsync from '../utils/catchAsync';
+import catchAsync from "../utils/catchAsync";
 import {
   sendVerificationEmail,
-  sendAfterResetPasswordMessage
-} from '../utils/sendEmail';
+  sendAfterResetPasswordMessage,
+} from "../utils/sendEmail";
 
 // Middlewares
 import {
   verifyToken,
   generateAuthTokens,
-  generateVerifyEmailToken
-} from '../middlewares/token';
+  generateVerifyEmailToken,
+} from "../middlewares/token";
 
 // Models
-import { User, Token } from '../models/index';
+import { User, Token } from "../models/index";
 
 /**
  * @desc    Sign Up Service
@@ -28,9 +29,9 @@ export const signup = catchAsync(async (body) => {
   let { companyName, address, phone } = body;
 
   // 1) Check all fields
-  if (!companyName) companyName = '';
-  if (!address) address = '';
-  if (!phone) phone = '';
+  if (!companyName) companyName = "";
+  if (!address) address = "";
+  if (!phone) phone = "";
 
   if (
     !name ||
@@ -41,27 +42,27 @@ export const signup = catchAsync(async (body) => {
     !role
   ) {
     return {
-      type: 'Error',
-      message: 'fieldsRequired',
-      statusCode: 400
+      type: "Error",
+      message: "fieldsRequired",
+      statusCode: 400,
     };
   }
 
   // 2) Check if password length less than 8
   if (password.length < 8) {
     return {
-      type: 'Error',
-      message: 'passwordLength',
-      statusCode: 400
+      type: "Error",
+      message: "passwordLength",
+      statusCode: 400,
     };
   }
 
   // 3) Make admin role forbidden
-  if (!['user', 'seller'].includes(role)) {
+  if (!["user", "seller"].includes(role)) {
     return {
-      type: 'Error',
-      message: 'roleRestriction',
-      statusCode: 400
+      type: "Error",
+      message: "roleRestriction",
+      statusCode: 400,
     };
   }
 
@@ -70,9 +71,9 @@ export const signup = catchAsync(async (body) => {
   // 4) Check if the email already taken
   if (isEmailTaken) {
     return {
-      type: 'Error',
-      message: 'emailTaken',
-      statusCode: 409
+      type: "Error",
+      message: "emailTaken",
+      statusCode: 409,
     };
   }
 
@@ -86,7 +87,7 @@ export const signup = catchAsync(async (body) => {
     role,
     companyName,
     address,
-    phone
+    phone,
   });
 
   // 8) Generate tokens (access token & refresh token)
@@ -103,11 +104,11 @@ export const signup = catchAsync(async (body) => {
 
   // 12) If everything is OK, send user data
   return {
-    type: 'Success',
+    type: "Success",
     statusCode: 201,
-    message: 'successfulSignUp',
+    message: "successfulSignUp",
     user,
-    tokens
+    tokens,
   };
 });
 
@@ -122,18 +123,18 @@ export const signin = catchAsync(async (email, password) => {
   if (!email || !password) {
     return {
       statusCode: 400,
-      message: 'emailPasswordRequired'
+      message: "emailPasswordRequired",
     };
   }
 
   // 2) Get user from database
-  const user = await User.findOne({ email }).select('+password');
+  const user = await User.findOne({ email }).select("+password");
 
   // 3) Check if user does not exist
   if (!user) {
     return {
       statusCode: 401,
-      message: 'incorrectEmailOrPassword'
+      message: "incorrectEmailOrPassword",
     };
   }
 
@@ -143,7 +144,7 @@ export const signin = catchAsync(async (email, password) => {
   if (!isMatch) {
     return {
       statusCode: 401,
-      message: 'incorrectEmailOrPassword'
+      message: "incorrectEmailOrPassword",
     };
   }
 
@@ -152,11 +153,11 @@ export const signin = catchAsync(async (email, password) => {
 
   // 6) If everything ok, send data
   return {
-    type: 'Success',
+    type: "Success",
     statusCode: 200,
-    message: 'successfulLogin',
+    message: "successfulLogin",
     user,
-    tokens
+    tokens,
   };
 });
 
@@ -169,23 +170,23 @@ export const logout = catchAsync(async (refreshToken) => {
   // 1) Find token document and delete it
   const refreshTokenDoc = await Token.findOneAndDelete({
     token: refreshToken,
-    type: tokenTypes.REFRESH
+    type: tokenTypes.REFRESH,
   });
 
   // 2) Check if token already exist
   if (!refreshTokenDoc) {
     return {
-      type: 'Error',
+      type: "Error",
       statusCode: 401,
-      message: 'loginAgain'
+      message: "loginAgain",
     };
   }
 
   // 3) If everything ok, send data
   return {
-    type: 'Success',
+    type: "Success",
     statusCode: 200,
-    message: 'successfulogout'
+    message: "successfulogout",
   };
 });
 
@@ -201,9 +202,9 @@ export const refreshAuth = catchAsync(async (refreshToken) => {
   // 2) Check if refresh token document already exist
   if (!refreshTokenDoc) {
     return {
-      type: 'Error',
+      type: "Error",
       statusCode: 404,
-      message: 'No token found.'
+      message: "No token found.",
     };
   }
 
@@ -212,9 +213,9 @@ export const refreshAuth = catchAsync(async (refreshToken) => {
   // 3) Check if user exists
   if (!user) {
     return {
-      type: 'Error',
+      type: "Error",
       statusCode: 404,
-      message: 'noUserFound'
+      message: "noUserFound",
     };
   }
 
@@ -223,10 +224,10 @@ export const refreshAuth = catchAsync(async (refreshToken) => {
 
   // 5) If everything is OK, send data
   return {
-    type: 'Success',
+    type: "Success",
     statusCode: 200,
-    message: 'successfulTokenGeneration',
-    tokens
+    message: "successfulTokenGeneration",
+    tokens,
   };
 });
 
@@ -242,9 +243,9 @@ export const authToken = catchAsync(async (token) => {
   // 2) Check if token exists in the database
   if (!tokenDoc) {
     return {
-      type: 'Error',
+      type: "Error",
       statusCode: 404,
-      message: 'No token found.'
+      message: "No token found.",
     };
   }
 
@@ -253,18 +254,18 @@ export const authToken = catchAsync(async (token) => {
   // 3) Check if user exists
   if (!user) {
     return {
-      type: 'Error',
+      type: "Error",
       statusCode: 404,
-      message: 'noUserFound'
+      message: "noUserFound",
     };
   }
 
   // 5) If everything is OK, send data
   return {
-    type: 'Success',
+    type: "Success",
     statusCode: 200,
-    message: 'successfulTokenAuthentication',
-    user
+    message: "successfulTokenAuthentication",
+    user,
   };
 });
 
@@ -281,22 +282,22 @@ export const changePassword = catchAsync(
     // 1) Check if password and passwordConfirmation are not the same
     if (password !== passwordConfirmation) {
       return {
-        type: 'Error',
+        type: "Error",
         statusCode: 400,
-        message: 'passConfirm'
+        message: "passConfirm",
       };
     }
 
-    const user = await User.findById(userId).select('+password');
+    const user = await User.findById(userId).select("+password");
 
     const isMatch = await user.isPasswordMatch(currentPassword);
 
     // 2) Check if currentPassword isn't the same of user password
     if (!isMatch) {
       return {
-        type: 'Error',
-        message: 'notSamePassword',
-        statusCode: 400
+        type: "Error",
+        message: "notSamePassword",
+        statusCode: 400,
       };
     }
 
@@ -308,9 +309,9 @@ export const changePassword = catchAsync(
 
     // 4) If everything is OK, send data
     return {
-      type: 'Success',
+      type: "Success",
       statusCode: 200,
-      message: 'successfulPasswordChange'
+      message: "successfulPasswordChange",
     };
   }
 );
@@ -327,9 +328,9 @@ export const resetPassword = catchAsync(
     // 1) Check if password and passwordConfirmation are not the same
     if (password !== passwordConfirmation) {
       return {
-        type: 'Error',
+        type: "Error",
         statusCode: 400,
-        message: 'passConfirm'
+        message: "passConfirm",
       };
     }
 
@@ -342,9 +343,9 @@ export const resetPassword = catchAsync(
     // 3) Check if reset password token document already exists
     if (!resetPasswordTokenDoc) {
       return {
-        type: 'Error',
+        type: "Error",
         statusCode: 400,
-        message: 'invalidLink'
+        message: "invalidLink",
       };
     }
 
@@ -353,9 +354,9 @@ export const resetPassword = catchAsync(
     // 4) Check if user already exist
     if (!user) {
       return {
-        type: 'Error',
+        type: "Error",
         statusCode: 404,
-        message: 'noUserFound'
+        message: "noUserFound",
       };
     }
 
@@ -369,14 +370,14 @@ export const resetPassword = catchAsync(
 
     // 7) Deleteing user reset token
     await Token.findByIdAndDelete(user.id, {
-      type: tokenTypes.RESET_PASSWORD
+      type: tokenTypes.RESET_PASSWORD,
     });
 
     // 8) If everything is OK, send data
     return {
-      type: 'Success',
+      type: "Success",
       statusCode: 200,
-      message: 'successfulPasswordChange'
+      message: "successfulPasswordChange",
     };
   }
 );
@@ -398,9 +399,9 @@ export const verifyEmail = catchAsync(async (verifyEmailToken) => {
   // 2) Check if user already exist
   if (!user) {
     return {
-      type: 'Error',
+      type: "Error",
       statusCode: 404,
-      message: 'noUserFound'
+      message: "noUserFound",
     };
   }
 
@@ -412,8 +413,84 @@ export const verifyEmail = catchAsync(async (verifyEmailToken) => {
 
   // 5) If everything is OK, send data
   return {
-    type: 'Success',
+    type: "Success",
     statusCode: 200,
-    message: 'successfulEmailVerification'
+    message: "successfulEmailVerification",
   };
+});
+
+/**
+ * @desc    Sign In With Google Service
+ * @param   { String } googleAccessToken - Google access token
+ * @returns { Object<type|statusCode|message> }
+ */
+export const signInWithGoogle = catchAsync(async (googleAccessToken) => {
+  try {
+    // 1) Obtener información del usuario desde Google
+    const response = await axios.get(
+      `https://www.googleapis.com/oauth2/v3/userinfo`,
+      {
+        headers: {
+          Authorization: `Bearer ${googleAccessToken}`,
+        },
+      }
+    );
+
+    const userData = response.data;
+
+    // 2) Comprobar si el usuario ya está registrado en tu base de datos
+    const existingUser = await User.findOne({ email: userData.email });
+
+    if (existingUser) {
+      // El usuario ya está registrado, iniciar sesión con el usuario existente
+      const tokens = await generateAuthTokens(existingUser);
+
+      return {
+        type: "Success",
+        statusCode: 200,
+        message: "successfulLogin",
+        user: existingUser,
+        tokens,
+      };
+    } else {
+      // El usuario no está registrado, realizar el proceso de registro
+
+      // Generar una contraseña aleatoria para el nuevo usuario
+      const randomPassword = randomstring.generate(12);
+
+      const newUser = await User.create({
+        name: userData.name,
+        username: userData.name,
+        email: userData.email,
+        password: randomPassword,
+        isEmailVerified: true, // Establecer email como verificado
+      });
+
+      const tokens = await generateAuthTokens(newUser);
+
+      return {
+        type: "Success",
+        statusCode: 201,
+        message: "successfulSignUp",
+        user: newUser,
+        tokens,
+      };
+    }
+  } catch (error) {
+    if (error.response && error.response.status === 401) {
+      // Error de token inválido
+      return {
+        type: "Error",
+        statusCode: 401,
+        message: "invalidGoogleAccessToken",
+      };
+    } else {
+      // Otros errores
+      return {
+        type: "Error",
+        statusCode: 500,
+        message: "Internal server error processing Google request",
+      };
+    }
+  }
 });

@@ -1,17 +1,17 @@
 /* eslint-disable no-await-in-loop */
 // Packages
-import STRIPE_SDK from 'stripe';
-import moment from 'moment';
+import STRIPE_SDK from "stripe";
+import moment from "moment";
 
 // Utils
-import catchAsync from '../utils/catchAsync';
-import APIFeatures from '../utils/apiFeatures';
+import catchAsync from "../utils/catchAsync";
+import APIFeatures from "../utils/apiFeatures";
 
 // Configs
-import config from '../config/config';
+import config from "../config/config";
 
 // Models
-import { Order, Cart, Product } from '../models/index';
+import { Order, Cart, Product, Discount } from "../models/index";
 
 const stripe = STRIPE_SDK(config.stripe.secret_key);
 
@@ -36,9 +36,9 @@ export const createOrder = catchAsync(async (body, user) => {
     !phone
   ) {
     return {
-      type: 'Error',
-      message: 'fieldsRequired',
-      statusCode: 400
+      type: "Error",
+      message: "fieldsRequired",
+      statusCode: 400,
     };
   }
 
@@ -48,77 +48,50 @@ export const createOrder = catchAsync(async (body, user) => {
   // 4) Check if cart doesn't exist
   if (!cart || cart.items.length === 0) {
     return {
-      type: 'Error',
-      message: 'noCartFound',
-      statusCode: 404
+      type: "Error",
+      message: "noCartFound",
+      statusCode: 404,
     };
   }
 
-  // 4) Check payment method
-  if (paymentMethod === 'cash') {
-    // 1) If payment method is cash the create new order for the cash method
-    const order = await Order.create({
-      products: cart.items,
-      user: user._id,
-      totalPrice: cart.totalPrice,
-      shippingAddress,
-      paymentMethod,
-      phone
-    });
-
-    // 2) Update product sold and quantity fields
-    for (const item of cart.items) {
-      const id = item.product;
-      const { totalProductQuantity } = item;
-      const product = await Product.findById(id);
-      const sold = product.sold + totalProductQuantity;
-      const quantity = product.quantity - totalProductQuantity;
-      await Product.findByIdAndUpdate(id, { sold, quantity });
-    }
-
-    // 3) Delete cart
-    await Cart.findByIdAndDelete(cart._id);
-
-    // 4) Remove user discount code
-    user.discountCode = '';
-    await user.save();
-
-    // 5) If everything is OK, send data
-    return {
-      type: 'Success',
-      message: 'successfulOrderCreate',
-      statusCode: 201,
-      order
-    };
-  }
-
-  // 5) If payment method is card then extract card data from body
+  // 5) Extract card data from body
   const { cardNumber, expMonth, expYear, cvc } = body;
 
   // 6) Check if user entered card data
   if (!cardNumber || !expMonth || !expYear || !cvc) {
     return {
-      type: 'Error',
-      message: 'fieldsRequired',
-      statusCode: 400
+      type: "Error",
+      message: "fieldsRequired",
+      statusCode: 400,
     };
   }
 
-  // 7) Create stripe card token
+  // 7) Busca el código de descuento del usuario
+  const userDiscount = await Discount.findOne({ code: user.discountCode });
+
+  if (userDiscount) {
+    // Calcula el descuento como un porcentaje del total
+    const discountAmount = (userDiscount.discount / 100) * cart.totalPrice;
+
+    // Resta el descuento al total del pedido
+    cart.totalPrice -= discountAmount;
+  }
+
+  // 8) Create stripe card token
   const token = await stripe.tokens.create({
     card: {
       number: cardNumber,
       exp_month: expMonth,
       exp_year: expYear,
-      cvc
-    }
+      cvc,
+    },
   });
-  // 8) Create stripe charge
+  // 9) Create stripe charge
   const charge = await stripe.charges.create({
     amount: Math.ceil(cart.totalPrice * 100),
-    currency: 'usd',
+    currency: "usd",
     source: token.id,
-    description: 'ASHON Store, payment made by a customer',
+    description: "ASHON Store, payment made by a customer",
     metadata: {
       address_city: city,
       address_country: country,
@@ -126,10 +99,10 @@ export const createOrder = catchAsync(async (body, user) => {
       address_postal_code: postalCode,
       email: user.email,
       name: user.name,
-      phone: user.phone
-    }
+      phone: user.phone,
+    },
   });
-  // 9) Create order with payment method card
+  // 10) Create order with payment method card
   const order = await Order.create({
     products: cart.items,
     user: user._id,
@@ -139,10 +112,10 @@ export const createOrder = catchAsync(async (body, user) => {
     shippingAddress,
     paymentMethod,
     paymentStripeId: charge.id,
-    phone
+    phone,
   });
 
-  // 10) Update product sold and quantity fields
+  // 11) Update product sold and quantity fields
   for (const item of cart.items) {
     const id = item.product;
     const { totalProductQuantity } = item;
@@ -152,19 +125,19 @@ export const createOrder = catchAsync(async (body, user) => {
     await Product.findByIdAndUpdate(id, { sold, quantity });
   }
 
-  // 11) Delete cart
+  // 12) Delete cart
   await Cart.findByIdAndDelete(cart._id);
 
-  // 12) Remove user discount code
-  user.discountCode = '';
+  // 13) Remove user discount code
+  user.discountCode = "";
   await user.save();
 
-  // 13) If everything is OK, send data
+  // 14) If everything is OK, send data
   return {
-    type: 'Success',
-    message: 'successfulOrderCreate',
+    type: "Success",
+    message: "successfulOrderCreate",
     statusCode: 201,
-    order
+    order,
   };
 });
 
@@ -178,26 +151,26 @@ export const orderStatus = catchAsync(async (status, id) => {
   // 1) All fields are required
   if (!status) {
     return {
-      type: 'Error',
-      message: 'fieldsRequired',
-      statusCode: 400
+      type: "Error",
+      message: "fieldsRequired",
+      statusCode: 400,
     };
   }
 
   // 2) Check if status doesn't meet the enum
   if (
     ![
-      'Not Processed',
-      'Processing',
-      'Shipped',
-      'Delivered',
-      'Cancelled'
+      "Not Processed",
+      "Processing",
+      "Shipped",
+      "Delivered",
+      "Cancelled",
     ].includes(status)
   ) {
     return {
-      type: 'Error',
-      message: 'notInStatusEnum',
-      statusCode: 400
+      type: "Error",
+      message: "notInStatusEnum",
+      statusCode: 400,
     };
   }
 
@@ -206,37 +179,37 @@ export const orderStatus = catchAsync(async (status, id) => {
   // 3) Check if order doesn't exist
   if (!order) {
     return {
-      type: 'Error',
-      message: 'noOrder',
-      statusCode: 404
+      type: "Error",
+      message: "noOrder",
+      statusCode: 404,
     };
   }
 
   // 4) Check if order have been cancelled
-  if (status === 'Cancelled') {
+  if (status === "Cancelled") {
     for (const item of order.products) {
       const product = await Product.findById(item.product);
 
       if (!product) {
         return {
-          type: 'Error',
-          message: 'noProductFound',
-          statusCode: 404
+          type: "Error",
+          message: "noProductFound",
+          statusCode: 404,
         };
       }
 
       await Product.findByIdAndUpdate(item.product, {
         quantity: product.quantity + item.totalProductQuantity,
-        sold: product.sold - item.totalProductQuantity
+        sold: product.sold - item.totalProductQuantity,
       });
     }
 
     await Order.findByIdAndDelete(id);
 
     return {
-      type: 'Success',
-      message: 'successfulOrderCancel',
-      statusCode: 200
+      type: "Success",
+      message: "successfulOrderCancel",
+      statusCode: 200,
     };
   }
 
@@ -247,9 +220,9 @@ export const orderStatus = catchAsync(async (status, id) => {
 
   // 6) If everything is OK, send data
   return {
-    type: 'Success',
-    message: 'successfulStatusUpdate',
-    statusCode: 200
+    type: "Success",
+    message: "successfulStatusUpdate",
+    statusCode: 200,
   };
 });
 
@@ -267,45 +240,42 @@ export const queryOrders = catchAsync(async (req) => {
   // 2) Check of orders doesn't exist
   if (!orders) {
     return {
-      type: 'Error',
-      message: 'noOrders',
-      statusCode: 404
+      type: "Error",
+      message: "noOrders",
+      statusCode: 404,
     };
   }
 
   // 3) If everything is OK, send data
   return {
-    type: 'Success',
-    message: 'successfulOrdersFound',
+    type: "Success",
+    message: "successfulOrdersFound",
     statusCode: 200,
-    orders
+    orders,
   };
 });
 
-
 export const queryAllHistoryOrders = catchAsync(async (req) => {
-
   // 1) Get all orders
   const orders = await APIFeatures(req, Order);
 
   // 2) Check of orders doesn't exist
   if (!orders) {
     return {
-      type: 'Error',
-      message: 'noOrders',
-      statusCode: 404
+      type: "Error",
+      message: "noOrders",
+      statusCode: 404,
     };
   }
 
   // 3) If everything is OK, send data
   return {
-    type: 'Success',
-    message: 'successfulOrdersFound',
+    type: "Success",
+    message: "successfulOrdersFound",
     statusCode: 200,
-    orders
+    orders,
   };
 });
-
 
 /**
  * @desc    Query Order Using It's ID
@@ -319,18 +289,18 @@ export const queryOrder = catchAsync(async (id) => {
   // 2) Check if order doesn't exist
   if (!order) {
     return {
-      type: 'Error',
-      message: 'noOrder',
-      statusCode: 404
+      type: "Error",
+      message: "noOrder",
+      statusCode: 404,
     };
   }
 
   // 3) If everything is OK, send data
   return {
-    type: 'Success',
-    message: 'successfulOrderFound',
+    type: "Success",
+    message: "successfulOrderFound",
     statusCode: 200,
-    order
+    order,
   };
 });
 
@@ -346,9 +316,9 @@ export const cancelOrder = catchAsync(async (id) => {
   // 2) Check if order doesn't exist
   if (!order) {
     return {
-      type: 'Error',
-      message: 'noOrder',
-      statusCode: 404
+      type: "Error",
+      message: "noOrder",
+      statusCode: 404,
     };
   }
 
@@ -358,15 +328,15 @@ export const cancelOrder = catchAsync(async (id) => {
 
     if (!product) {
       return {
-        type: 'Error',
-        message: 'noProductFound',
-        statusCode: 404
+        type: "Error",
+        message: "noProductFound",
+        statusCode: 404,
       };
     }
 
     await Product.findByIdAndUpdate(item.product, {
       quantity: product.quantity + item.totalProductQuantity,
-      sold: product.sold - item.totalProductQuantity
+      sold: product.sold - item.totalProductQuantity,
     });
   }
 
@@ -374,8 +344,8 @@ export const cancelOrder = catchAsync(async (id) => {
 
   // 4) If everything is OK, send data
   return {
-    type: 'Success',
-    message: 'successfulOrderCancel',
-    statusCode: 200
+    type: "Success",
+    message: "successfulOrderCancel",
+    statusCode: 200,
   };
 });

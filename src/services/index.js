@@ -6,7 +6,8 @@ import {
   resetPassword,
   verifyEmail,
   changePassword,
-  authToken
+  authToken,
+  signInWithGoogle
 } from './auth.service';
 
 import {
@@ -25,7 +26,6 @@ import {
   updateUserDetails,
   deleteUser,
   deleteMyAccount,
-  queryAuthUser
 } from './user.service';
 
 import {
@@ -98,7 +98,8 @@ const authService = {
   resetPassword,
   verifyEmail,
   changePassword,
-  authToken
+  authToken,
+  signInWithGoogle
 };
 
 const reviewService = {
@@ -117,7 +118,6 @@ const userService = {
   updateUserDetails,
   deleteUser,
   deleteMyAccount,
-  queryAuthUser
 };
 
 const categoryService = {

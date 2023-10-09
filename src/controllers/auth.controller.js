@@ -333,3 +333,34 @@ export const verifyEmail = catchAsync(async (req, res) => {
     message: req.polyglot.t(message),
   });
 });
+
+/**
+ * @desc      Sign In With Google Controller
+ * @param     { Object } req - Request object
+ * @param     { Object } res - Response object
+ * @property  { String } req.body.googleAccessToken - Google access token
+ * @returns   { JSON } - A JSON object representing the type, message, user data, and tokens
+ */
+export const signInWithGoogle = catchAsync(async (req, res) => {
+  const { googleAccessToken } = req.body;
+
+  // 1) Calling sign in service
+  const { type, message, statusCode, user, tokens } =
+    await authService.signInWithGoogle(googleAccessToken);
+
+  // 2) Check if something went wrong
+  if (type === "Error") {
+    return res.status(statusCode).json({
+      type,
+      message: req.polyglot.t(message),
+    });
+  }
+
+  // 3) If everything is OK, send data
+  return res.status(statusCode).json({
+    type,
+    message: req.polyglot.t(message),
+    user,
+    tokens,
+  });
+});

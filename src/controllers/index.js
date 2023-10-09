@@ -8,7 +8,8 @@ import {
   verifyEmail,
   sendVerificationEmail,
   changePassword,
-  authTokens
+  authTokens,
+  signInWithGoogle
 } from './auth.controller';
 
 import {
@@ -103,7 +104,8 @@ const authController = {
   verifyEmail,
   sendVerificationEmail,
   changePassword,
-  authTokens
+  authTokens,
+  signInWithGoogle
 };
 
 const userController = {

@@ -17,7 +17,8 @@ const {
   verifyEmail,
   sendVerificationEmail,
   changePassword,
-  authTokens
+  authTokens,
+  signInWithGoogle
 } = authController;
 
 const router = express.Router();
@@ -27,6 +28,8 @@ router.post('/login', signin);
 router.post('/register', signup);
 
 router.post('/logout', logout);
+
+router.post('/google-login', signInWithGoogle);
 
 router.post('/tokens', refreshTokens);
 
