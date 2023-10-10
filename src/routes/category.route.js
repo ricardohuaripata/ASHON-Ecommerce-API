@@ -31,6 +31,8 @@ router.get('/:id', getCategory);
 // Protect All Next Routes
 router.use(protect);
 
+router.use(restrictedTo('admin'));
+
 // Add Category (Multer Middleware) Route
 router.post('/', singleFile('image'), addCategory);
 

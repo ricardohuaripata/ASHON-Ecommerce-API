@@ -444,6 +444,8 @@ export const signInWithGoogle = catchAsync(async (googleAccessToken) => {
     if (existingUser) {
       // El usuario ya está registrado, iniciar sesión con el usuario existente
       const tokens = await generateAuthTokens(existingUser);
+      // Establecer email como verificado
+      await User.findByIdAndUpdate(existingUser.id, { isEmailVerified: true });
 
       return {
         type: "Success",
