@@ -10,6 +10,8 @@ import { categoryController } from '../controllers/index';
 // Utils
 import { singleFile } from '../utils/multer';
 
+import restrictedTo from '../middlewares/restrictedTo';
+
 const {
   getAllCategories,
   getCategory,
