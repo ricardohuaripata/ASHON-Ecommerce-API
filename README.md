@@ -1,9 +1,12 @@
 <!-- PROJECT LOGO -->
 <br />
-<div style="display: flex; flex-direction: column; align-items: center;">
+<p align="center">
+  <a href="https://github.com/ricardohuaripata/ASHON-Ecommerce-API">
     <img src="https://res.cloudinary.com/dmravgyts/image/upload/v1696451966/ASHON_ICON_ii65la.png" alt="Logo" width="150" height="150">
-    <h2>ASHON STORE API</h2>
-</div>
+  </a>
+</p>
+
+<h2 align="center">ASHON STORE API</h2>
 
 ##  API - Funcionalidades
 
