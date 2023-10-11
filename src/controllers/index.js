@@ -26,8 +26,6 @@ import {
   deleteProduct,
   top5Cheap,
   productStats,
-  getProductsByGenre,
-  getProductsByGenreAndCategory,
   getProductsByIds,
   getProductsBySearch
 } from './product.controller';
@@ -45,6 +43,7 @@ import {
 import {
   getAllCategories,
   getCategory,
+  getCategoryByName,
   addCategory,
   updateCategoryDetails,
   updateCategoryImage,
@@ -121,6 +120,7 @@ const userController = {
 const categoryController = {
   getAllCategories,
   getCategory,
+  getCategoryByName,
   addCategory,
   updateCategoryDetails,
   updateCategoryImage,
@@ -141,8 +141,6 @@ const productController = {
   deleteProduct,
   top5Cheap,
   productStats,
-  getProductsByGenre,
-  getProductsByGenreAndCategory,
   getProductsByIds,
   getProductsBySearch
 };

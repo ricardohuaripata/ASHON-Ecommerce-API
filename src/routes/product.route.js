@@ -29,8 +29,6 @@ const {
   deleteProduct,
   top5Cheap,
   productStats,
-  getProductsByGenre,
-  getProductsByGenreAndCategory,
   getProductsByIds,
   getProductsBySearch,
 } = productController;
@@ -46,10 +44,6 @@ router.get("/product-stats", productStats);
 router.get("/", getAllProducts);
 
 router.get("/:productId", getProduct);
-
-router.get("/genre/:genre", getProductsByGenre);
-
-router.get("/genre/:genre/:categoryName", getProductsByGenreAndCategory);
 
 router.post("/ids", getProductsByIds);
 

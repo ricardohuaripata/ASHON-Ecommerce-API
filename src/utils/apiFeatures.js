@@ -1,9 +1,9 @@
-// Utils
 import catchAsync from './catchAsync';
 import AppError from './appError';
 
 const apiFeatures = catchAsync(async (req, model, populate) => {
-  let query;
+  // Create a base query
+  let query = model;
 
   // Copy req.query
   const reqQuery = { ...req.query };
@@ -14,20 +14,13 @@ const apiFeatures = catchAsync(async (req, model, populate) => {
   // Loop over removeFields and delete them from reqQuery
   removeFields.forEach((param) => delete reqQuery[param]);
 
-  // Create query string
-  let queryStr = JSON.stringify(reqQuery);
+  // Apply filters
+  if (req.query.filter) {
+    const filter = JSON.parse(req.query.filter);
 
-  // Create operators ($gt, $gte, etc)
-  queryStr = queryStr.replace(
-    /\b(gt|gte|lt|lte|in)\b/g,
-    (match) => `$${match}`
-  );
-
-  // Finding resource
-  query = model.find(JSON.parse(queryStr));
-
-  if (!query) {
-    throw new AppError('No Data Found', 400);
+    for (const key in filter) {
+      query = query.find({ [key]: filter[key] });
+    }
   }
 
   // Select Fields
@@ -40,13 +33,10 @@ const apiFeatures = catchAsync(async (req, model, populate) => {
   if (req.query.sort) {
     const sortBy = req.query.sort.split(',');
     const obj = {};
-    const number = Number(sortBy[0]);
 
-    sortBy.forEach((field) => {
-      obj[field] = number;
-    });
-
-    delete obj[sortBy[0]];
+    for (const field of sortBy) {
+      obj[field] = 1; // 1 for ascending, -1 for descending
+    }
 
     query = query.sort(obj);
   }
@@ -64,17 +54,6 @@ const apiFeatures = catchAsync(async (req, model, populate) => {
 
   // Executing query
   query = await query;
-
-  const filterByValue = (array, value) =>
-    array.filter(
-      (data) =>
-        JSON.stringify(data).toLowerCase().indexOf(value.toLowerCase()) !== -1
-    );
-
-  if (req.query.filter) {
-    const filter = req.query.filter.split(',').join(' ');
-    return filterByValue(query, filter);
-  }
 
   return query;
 });

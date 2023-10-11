@@ -72,6 +72,34 @@ export const getCategory = catchAsync(async (req, res) => {
 });
 
 /**
+ * @desc      Get Category Using His Name
+ * @param     { Object } req - Request object
+ * @param     { Object } res - Response object
+ * @property  { String } req.params.name - Category unique name
+ * @returns   { JSON } - A JSON object representing the type, message, and the category
+ */
+export const getCategoryByName = catchAsync(async (req, res) => {
+  // 1) Get category using it's ID
+  const { type, message, statusCode, category } =
+    await categoryService.queryCategoryByName(req.params.name);
+
+  // 2) Check if there is an error
+  if (type === 'Error') {
+    return res.status(statusCode).json({
+      type,
+      message: req.polyglot.t(message)
+    });
+  }
+
+  // 3) If everything is OK, send data
+  return res.status(statusCode).json({
+    type,
+    message: req.polyglot.t(message),
+    category
+  });
+});
+
+/**
  * @desc      Create New Category Controller
  * @param     { Object } req - Request object
  * @param     { Object } res - Response object

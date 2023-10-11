@@ -107,6 +107,32 @@ export const queryCategory = catchAsync(async (id) => {
 });
 
 /**
+ * @desc    Query Category Using His name
+ * @param   { String } Name - Category unique name
+ * @returns { Object<type|message|statusCode|category> }
+ */
+export const queryCategoryByName = catchAsync(async (name) => {
+  const category = await Category.findOne({ name });
+
+  // 1) Check if category doesn't exist
+  if (!category) {
+    return {
+      type: 'Error',
+      message: 'noCategoryFound',
+      statusCode: 404
+    };
+  }
+
+  // 2) If everything is OK, send date
+  return {
+    type: 'Success',
+    message: 'successfulCategoryFound',
+    statusCode: 200,
+    category
+  };
+});
+
+/**
  * @desc    Update Category Details
  * @param   { String } id - Category ID
  * @param   { Object } body - Category details

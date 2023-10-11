@@ -16,11 +16,10 @@ import { productService } from '../services/index';
  */
 export const getAllProducts = catchAsync(async (req, res) => {
   let { page, sort, limit, select } = req.query;
-
   // 1) Setting default params
   if (!page) req.query.page = 1;
   if (!sort) req.query.sort = '';
-  if (!limit) req.query.limit = 20;
+  if (!limit) req.query.limit = 10;
   if (!select) req.query.select = '';
 
   // 1) Get all products
@@ -77,48 +76,6 @@ export const getProductsBySearch = catchAsync(async (req, res) => {
   // 1) Get product using it's ID
   const { type, message, statusCode, products } =
     await productService.queryProductsBySearch(searchParam);
-
-  // 2) Check if there is an error
-  if (type === 'Error') {
-    return res.status(statusCode).json({
-      type,
-      message: req.polyglot.t(message)
-    });
-  }
-
-  // 3) If everything is OK, send data
-  return res.status(statusCode).json({
-    type,
-    message: req.polyglot.t(message),
-    products
-  });
-});
-
-export const getProductsByGenre = catchAsync(async (req, res) => {
-  // 1) Get product using it's ID
-  const { type, message, statusCode, products } =
-    await productService.queryProductsByGenre(req.params.genre);
-
-  // 2) Check if there is an error
-  if (type === 'Error') {
-    return res.status(statusCode).json({
-      type,
-      message: req.polyglot.t(message)
-    });
-  }
-
-  // 3) If everything is OK, send data
-  return res.status(statusCode).json({
-    type,
-    message: req.polyglot.t(message),
-    products
-  });
-});
-
-export const getProductsByGenreAndCategory = catchAsync(async (req, res) => {
-  // 1) Get product using it's ID
-  const { type, message, statusCode, products } =
-    await productService.queryProductsByGenreAndCategory(req.params.genre, req.params.categoryName);
 
   // 2) Check if there is an error
   if (type === 'Error') {

@@ -15,6 +15,7 @@ import restrictedTo from '../middlewares/restrictedTo';
 const {
   getAllCategories,
   getCategory,
+  getCategoryByName,
   addCategory,
   updateCategoryDetails,
   updateCategoryImage,
@@ -27,8 +28,11 @@ const router = express.Router();
 // Get All Categories Route
 router.get('/', getAllCategories);
 
-// Get Category Route
+// Get Category By Id Route
 router.get('/:id', getCategory);
+
+// Get Category By Name Route
+router.get('/name/:name', getCategoryByName);
 
 // Protect All Next Routes
 router.use(protect);

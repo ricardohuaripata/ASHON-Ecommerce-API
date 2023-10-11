@@ -5,7 +5,7 @@ import APIFeatures from '../utils/apiFeatures';
 import { uploadFile, destroyFile } from '../utils/cloudinary';
 
 // Model
-import { Product, Color, Size, Category } from '../models/index';
+import { Product, Color, Size } from '../models/index';
 
 /**
  * @desc    Query products
@@ -99,77 +99,6 @@ export const queryProductsBySearch = catchAsync(async (searchParam) => {
   }
 
   // If products are found, send them
-  return {
-    type: 'Success',
-    message: 'successfulProductsFound',
-    statusCode: 200,
-    products
-  };
-});
-
-export const queryProductsByGenre = catchAsync(async (genre) => {
-  const populateQuery = [
-    { path: 'colors', select: 'color' },
-    { path: 'sizes', select: 'size' }
-  ];
-
-  const products = await Product.find({ genre })
-    .populate(populateQuery)
-    .lean();
-
-  // 1) Check if product doesn't exist
-  if (!products) {
-    return {
-      type: 'Error',
-      message: 'noProductsFound',
-      statusCode: 404
-    };
-  }
-
-  // 2) If everything is OK, send product
-  return {
-    type: 'Success',
-    message: 'successfulProductsFound',
-    statusCode: 200,
-    products
-  };
-});
-
-export const queryProductsByGenreAndCategory = catchAsync(async (genre, categoryName) => {
-  const populateQuery = [
-    { path: 'colors', select: 'color' },
-    { path: 'sizes', select: 'size' }
-  ];
-
-  // Find the category by name
-  const category = await Category.findOne({ name: categoryName }).lean();
-
-  // Check if category exists
-  if (!category) {
-    return {
-      type: 'Error',
-      message: 'noCategoryFound',
-      statusCode: 404
-    };
-  }
-
-  // Get the categoryId
-  const categoryId = category._id;
-
-  const products = await Product.find({ genre, category: categoryId })
-    .populate(populateQuery)
-    .lean();
-
-  // Check if products exist
-  if (products.length === 0) {
-    return {
-      type: 'Error',
-      message: 'noProductsFound',
-      statusCode: 404
-    };
-  }
-
-  // If everything is OK, send products
   return {
     type: 'Success',
     message: 'successfulProductsFound',

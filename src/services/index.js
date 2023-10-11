@@ -32,6 +32,7 @@ import {
   createCategory,
   queryCategories,
   queryCategory,
+  queryCategoryByName,
   updateCategoryDetails,
   updateCategoryImage,
   deleteCategoryById
@@ -50,8 +51,6 @@ import {
   updateProductImages,
   deleteProduct,
   getProductStats,
-  queryProductsByGenre,
-  queryProductsByGenreAndCategory,
   queryProductsByIds,
   queryProductsBySearch
 } from './product.service';
@@ -124,6 +123,7 @@ const categoryService = {
   createCategory,
   queryCategories,
   queryCategory,
+  queryCategoryByName,
   updateCategoryDetails,
   updateCategoryImage,
   deleteCategoryById
@@ -142,8 +142,6 @@ const productService = {
   updateProductImages,
   deleteProduct,
   getProductStats,
-  queryProductsByGenre,
-  queryProductsByGenreAndCategory,
   queryProductsByIds,
   queryProductsBySearch
 };
