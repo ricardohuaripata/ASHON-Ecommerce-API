@@ -86,8 +86,9 @@ const apiFeatures = catchAsync(async (req, model, populate) => {
     records: query,
     metadata: {
       totalRecords,
+      pageRecordsCount: query.length,
       totalPages,
-      perPage: limit,
+      recordsPerPage: limit,
       currentPage: page,
     },
   };
