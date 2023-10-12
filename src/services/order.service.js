@@ -235,45 +235,49 @@ export const queryOrders = catchAsync(async (req) => {
   req.query.user = req.user._id;
 
   // 1) Get all orders
-  const orders = await APIFeatures(req, Order);
+  const result = await APIFeatures(req, Order);
 
   // 2) Check of orders doesn't exist
-  if (!orders) {
+  if (!result || !result.records.length) {
     return {
       type: "Error",
       message: "noOrders",
       statusCode: 404,
     };
   }
+  const { records, metadata } = result;
 
   // 3) If everything is OK, send data
   return {
     type: "Success",
     message: "successfulOrdersFound",
     statusCode: 200,
-    orders,
+    orders: records,
+    metadata: metadata
   };
 });
 
 export const queryAllHistoryOrders = catchAsync(async (req) => {
   // 1) Get all orders
-  const orders = await APIFeatures(req, Order);
+  const result = await APIFeatures(req, Order);
 
   // 2) Check of orders doesn't exist
-  if (!orders) {
+  if (!result || !result.records.length) {
     return {
       type: "Error",
       message: "noOrders",
       statusCode: 404,
     };
   }
+  const { records, metadata } = result;
 
   // 3) If everything is OK, send data
   return {
     type: "Success",
     message: "successfulOrdersFound",
     statusCode: 200,
-    orders,
+    orders: records,
+    metadata: metadata
   };
 });
 

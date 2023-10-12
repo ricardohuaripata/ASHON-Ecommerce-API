@@ -14,23 +14,25 @@ import { User, Discount } from '../models';
  * @returns { Object<type|message|statusCode|codes> }
  */
 export const getAllDiscountCodes = catchAsync(async (req) => {
-  const codes = await APIFeatures(req, Discount);
+  const result = await APIFeatures(req, Discount);
 
   // 1) Check if codes doesn't exist
-  if (!codes) {
+  if (!result || !result.records.length) {
     return {
       type: 'Error',
       message: 'noDiscountCodesFound',
       statusCode: 404
     };
   }
+  const { records, metadata } = result;
 
   // 2) If everything is OK, send data
   return {
     type: 'Success',
     message: 'successfulDiscountCodesFound',
     statusCode: 200,
-    codes
+    codes: records,
+    metadata: metadata
   };
 });
 

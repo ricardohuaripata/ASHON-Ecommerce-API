@@ -24,7 +24,7 @@ export const getAllCategories = catchAsync(async (req, res) => {
   if (!select) select = '';
 
   // 2) Get all categories
-  const { type, message, statusCode, categories } =
+  const { type, message, statusCode, categories, metadata } =
     await categoryService.queryCategories(req);
 
   // 3) Check if there is an error
@@ -39,7 +39,8 @@ export const getAllCategories = catchAsync(async (req, res) => {
   return res.status(statusCode).json({
     type,
     message: req.polyglot.t(message),
-    categories
+    categories,
+    metadata
   });
 });
 

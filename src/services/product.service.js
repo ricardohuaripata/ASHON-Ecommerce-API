@@ -18,10 +18,10 @@ export const queryProducts = catchAsync(async (req) => {
     { path: 'sizes', select: 'size' }
   ];
 
-  const products = await APIFeatures(req, Product, populateQuery);
+  const result = await APIFeatures(req, Product, populateQuery);
 
-  // 1) Check if porducts doesn't exist
-  if (!products) {
+  // 1) Check if products doesn't exist
+  if (!result || !result.records.length) {
     return {
       type: 'Error',
       message: 'noProductsFound',
@@ -29,12 +29,15 @@ export const queryProducts = catchAsync(async (req) => {
     };
   }
 
+  const { records, metadata } = result;
+
   // 3) If everything is OK, send data
   return {
     type: 'Success',
     message: 'successfulProductsFound',
     statusCode: 200,
-    products
+    products: records,
+    metadata: metadata
   };
 });
 

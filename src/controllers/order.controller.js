@@ -85,7 +85,7 @@ export const getAllOrders = catchAsync(async (req, res) => {
   if (!select) select = '';
 
   // 1) Get all orders
-  const { type, message, statusCode, orders } = await orderService.queryOrders(
+  const { type, message, statusCode, orders, metadata } = await orderService.queryOrders(
     req
   );
 
@@ -101,7 +101,8 @@ export const getAllOrders = catchAsync(async (req, res) => {
   return res.status(statusCode).json({
     type,
     message: req.polyglot.t(message),
-    orders
+    orders,
+    metadata
   });
 });
 
@@ -115,7 +116,7 @@ export const getAllHistoryOrders = catchAsync(async (req, res) => {
   if (!select) select = '';
 
   // 1) Get all orders
-  const { type, message, statusCode, orders } = await orderService.queryAllHistoryOrders(
+  const { type, message, statusCode, orders, metadata } = await orderService.queryAllHistoryOrders(
     req
   );
 
@@ -131,7 +132,8 @@ export const getAllHistoryOrders = catchAsync(async (req, res) => {
   return res.status(statusCode).json({
     type,
     message: req.polyglot.t(message),
-    orders
+    orders,
+    metadata
   });
 });
 

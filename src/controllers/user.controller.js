@@ -53,7 +53,7 @@ export const getUsers = catchAsync(async (req, res) => {
   if (!select) select = '';
 
   // 2) Get all users
-  const { type, message, statusCode, users } = await userService.queryUsers(
+  const { type, message, statusCode, users, metadata } = await userService.queryUsers(
     req
   );
 
@@ -69,7 +69,8 @@ export const getUsers = catchAsync(async (req, res) => {
   return res.status(statusCode).json({
     type,
     message: req.polyglot.t(message),
-    users
+    users,
+    metadata
   });
 });
 

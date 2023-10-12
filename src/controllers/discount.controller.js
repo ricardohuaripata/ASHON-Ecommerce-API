@@ -12,7 +12,7 @@ import { discountService } from '../services';
  */
 export const getAllDiscountCodes = catchAsync(async (req, res) => {
   // 1) Verify discount code
-  const { type, message, statusCode, codes } =
+  const { type, message, statusCode, codes, metadata } =
     await discountService.getAllDiscountCodes(req);
 
   // 2) Check if there is an error
@@ -27,7 +27,8 @@ export const getAllDiscountCodes = catchAsync(async (req, res) => {
   return res.status(statusCode).json({
     type,
     message: req.polyglot.t(message),
-    codes
+    codes,
+    metadata
   });
 });
 

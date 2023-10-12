@@ -74,23 +74,25 @@ export const createUser = catchAsync(async (body) => {
  * @returns { Object<type|message|statusCode|users> }
  */
 export const queryUsers = catchAsync(async (req) => {
-  const users = await APIFeatures(req, User);
+  const result = await APIFeatures(req, User);
 
   // 1) Check if users doesn't exist
-  if (users.length === 0) {
+  if (!result || !result.records.length) {
     return {
       type: 'Error',
       message: 'noUsersFound',
       statusCode: 404
     };
   }
+  const { records, metadata } = result;
 
   // 2) If everything is OK, send data
   return {
     type: 'Success',
     message: 'successfulUsersFound',
     statusCode: 200,
-    users
+    users: records,
+    metadata: metadata
   };
 });
 

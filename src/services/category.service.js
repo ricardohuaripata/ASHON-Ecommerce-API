@@ -61,22 +61,26 @@ export const createCategory = catchAsync(async (body, file) => {
  */
 export const queryCategories = catchAsync(async (req) => {
   // 1) Get all categories
-  const categories = await APIFeatures(req, Category);
+  const result = await APIFeatures(req, Category);
 
   // 2) Check if there are no categories
-  if (categories.length === 0) {
+  if (!result || !result.records.length) {
     return {
       type: 'Error',
       message: 'noCategories',
       statusCode: 404
     };
   }
+
+  const { records, metadata } = result;
+
   // 3) If everything is OK, send categories
   return {
     type: 'Success',
     message: 'successfulCategoriesFound',
     statusCode: 200,
-    categories
+    categories: records,
+    metadata: metadata
   };
 });
 

@@ -23,7 +23,7 @@ export const getAllProducts = catchAsync(async (req, res) => {
   if (!select) req.query.select = '';
 
   // 1) Get all products
-  const { type, message, statusCode, products } =
+  const { type, message, statusCode, products, metadata } =
     await productService.queryProducts(req);
 
   // 2) Check if there is an error
@@ -38,7 +38,8 @@ export const getAllProducts = catchAsync(async (req, res) => {
   return res.status(statusCode).json({
     type,
     message: req.polyglot.t(message),
-    products
+    products,
+    metadata
   });
 });
 

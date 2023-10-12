@@ -91,19 +91,20 @@ export const queryReviewsByUser = catchAsync(async (req) => {
     };
   }
 
-  let reviews = await APIFeatures(req, Review);
+  const result = await APIFeatures(req, Review);
 
   // 2) Check if reviews doesn't exist
-  if (reviews.length === 0) {
+  if (!result || !result.records.length) {
     return {
       type: 'Error',
       message: 'noReviewsFound',
       statusCode: 404
     };
   }
+  let { records } = result;
 
   // 3) Filter review to select only reviews of the user only
-  reviews = reviews.filter(
+  records = records.filter(
     (review) => review.user.toString() === req.params.userId.toString()
   );
 
@@ -112,7 +113,7 @@ export const queryReviewsByUser = catchAsync(async (req) => {
     type: 'Success',
     message: 'successfulReviewsFound',
     statusCode: 200,
-    reviews
+    reviews: records
   };
 });
 
@@ -133,10 +134,10 @@ export const queryReviews = catchAsync(async (req) => {
     };
   }
 
-  let reviews = await APIFeatures(req, Review);
+  const result = await APIFeatures(req, Review);
 
   // 2) Check if reviews doesn't exist
-  if (reviews.length === 0) {
+  if (!result || !result.records.length) {
     return {
       type: 'Error',
       message: 'noReviewsFound',
@@ -144,8 +145,10 @@ export const queryReviews = catchAsync(async (req) => {
     };
   }
 
+  let { records } = result;
+
   // 3) Filter review to select only reviews of the product only
-  reviews = reviews.filter(
+  records = records.filter(
     (review) => review.product.toString() === req.params.productId.toString()
   );
 
@@ -154,7 +157,7 @@ export const queryReviews = catchAsync(async (req) => {
     type: 'Success',
     message: 'successfulReviewsFound',
     statusCode: 200,
-    reviews
+    reviews: records
   };
 });
 
