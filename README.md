@@ -8,18 +8,19 @@
 
 <h2 align="center">ASHON STORE API</h2>
 
-##  API - Funcionalidades
+##  Funcionalidades
 
 * Autenticación:
+  * Inicio de sesión y registro con Google [Público]: Permite a los usuarios iniciar sesión o registrarse en la plataforma mediante su cuenta de Google.
   * Inicio de sesión [Público]: Permite a los usuarios iniciar sesión en la plataforma proporcionando sus credenciales.
   * Registro [Público]: Permite a los usuarios crear una nueva cuenta en la plataforma.
   * Cierre de sesión [Usuario]: Permite a los usuarios cerrar sesión en la plataforma.
   * Tokens [Usuario]: Proporciona tokens de acceso para autenticar las solicitudes realizadas por usuarios autenticados.
 * Gestión de contraseñas:
   * Cambiar contraseña [Usuario]: Permite a los usuarios autenticados cambiar su contraseña actual por una nueva.
-  * Olvidó su contraseña [Público]: Permite a los usuarios solicitar un correo electrónico para restablecer su contraseña en caso de olvido.
+  * Olvidé mi contraseña [Público]: Permite a los usuarios solicitar un correo electrónico para restablecer su contraseña en caso de olvido.
   * Restablecer contraseña [Público]: Permite a los usuarios restablecer su contraseña utilizando un enlace enviado por correo electrónico.
-* Gestión de correo electrónico:
+* Verificación de correos electrónicos:
   * Enviar verificación de correo electrónico [Usuario]: Envía un correo electrónico de verificación a los usuarios para confirmar su dirección de correo electrónico.
 * Usuarios:
   * Crear nuevo usuario [Administrador]: Permite a los administradores crear nuevos usuarios en la plataforma.
