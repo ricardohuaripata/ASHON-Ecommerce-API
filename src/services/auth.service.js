@@ -437,7 +437,6 @@ export const signInWithGoogle = catchAsync(async (googleAccessToken) => {
     );
 
     const userData = response.data;
-
     // 2) Comprobar si el usuario ya está registrado en tu base de datos
     const existingUser = await User.findOne({ email: userData.email });
 
@@ -458,13 +457,14 @@ export const signInWithGoogle = catchAsync(async (googleAccessToken) => {
       // El usuario no está registrado, realizar el proceso de registro
 
       // Generar una contraseña aleatoria para el nuevo usuario
-      const randomPassword = randomstring.generate(12);
+      const randomPassword = generateRandomPassword(8);
 
       const newUser = await User.create({
         name: userData.name,
         username: userData.name,
         email: userData.email,
         password: randomPassword,
+        passwordConfirmation: randomPassword,
         isEmailVerified: true, // Establecer email como verificado
       });
 
@@ -496,3 +496,16 @@ export const signInWithGoogle = catchAsync(async (googleAccessToken) => {
     }
   }
 });
+
+function generateRandomPassword(length) {
+  const charset =
+    "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789";
+  let password = "";
+
+  for (let i = 0; i < length; i++) {
+    const randomIndex = Math.floor(Math.random() * charset.length);
+    password += charset[randomIndex];
+  }
+
+  return password;
+}
