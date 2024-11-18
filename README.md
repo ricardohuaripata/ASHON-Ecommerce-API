@@ -2,7 +2,7 @@
 <br />
 <p align="center">
   <a href="https://github.com/ricardohuaripata/ASHON-Ecommerce-API">
-    <img src="https://res.cloudinary.com/dmravgyts/image/upload/v1696451966/ASHON_ICON_ii65la.png" alt="Logo" width="150" height="150">
+    <img src="https://github.com/user-attachments/assets/48bed2a5-6471-489f-8f6e-2eaee23e6e58" alt="Logo" width="150" height="150">
   </a>
 </p>
 
